@@ -382,14 +382,6 @@ ODP(window,"soralink",{
 ODP(window,"adtival_base64_encode",{
 	get:()=>{}
 })
-//Shorte.st
-transparentProperty("reqwest",r=>(typeof app!="undefined"&&document.querySelector(".skip-add-container .first-img[alt='Shorte.st']"))?a=>{
-	if(a.type==="jsonp")
-	{
-		a.success=s=>contributeAndNavigate(s.destinationUrl)
-	}
-	r(a)
-}:r)
 domainBypass(/ur\.ly|urly\.mobi/,()=>{
 	if(location.pathname.length>2&&location.pathname.substr(0,6)!="/goii/")
 	{
@@ -652,8 +644,17 @@ domainBypass("fouadmods.com",()=>{
 		value:()=>({countdown360:d=>{d.onComplete()}})
 	})
 })
+domainBypass("akwam.org",()=>{
+	window.setInterval=f=>setInterval(f,1)
+	awaitElement("a.download_button[href]",a=>safelyNavigate(a.href))
+})
+domainBypass("post.techtutors.site",()=>{
+	window.setInterval=f=>setInterval(f,1)
+	awaitElement("a#menuju[href]:not([href='#'])",a=>safelyNavigate(a.href))
+})
 //Insertion point for bypasses running before the DOM is loaded.
-domainBypass(/^((www\.)?((njiir|healthykk|linkasm|dxdrive|getwallpapers|sammobile|ydfile)\.com|punchsubs\.net|k2s\.cc|muhammadyoga\.me|u\.to|skiplink\.io|(uploadfree|freeupload)\.info|fstore\.biz))$/,()=>window.setInterval=f=>setInterval(f,1))
+domainBypass(/^((www\.)?((njiir|healthykk|linkasm|dxdrive|getwallpapers|sammobile|ydfile)\.com|(punchsubs|zedge)\.net|k2s\.cc|muhammadyoga\.me|u\.to|skiplink\.io|(uploadfree|freeupload)\.info|fstore\.biz))$/,()=>window.setInterval=f=>setInterval(f,1))
+hrefBypass(/thesimsresource\.com\/downloads\/details\/id\//,()=>window.setTimeout=f=>setTimeout(f,1))
 hrefBypass(/firefaucet\.win\/l\/|sfirmware\.com\/downloads-file\/|(apkily\.com\/getapp$)|androidtop\.net\/\?do=downloads\&id=/,()=>window.setInterval=f=>setInterval(f,1))
 hrefBypass(/emulator\.games\/download\.php|curseforge\.com\/.*\/download\/[0-9]*/,()=>window.setInterval=f=>setInterval(f,100))
 domainBypass(/^((www\.)?((racaty|longfiles|filepuma|portableapps)\.com|indishare\.org|datei\.to|keisekai\.fun|solvetube\.site))$/,()=>window.setTimeout=f=>setTimeout(f,1))
@@ -960,7 +961,7 @@ ensureDomLoaded(()=>{
 		})
 	})
 	domainBypass(/linkpoi\.(in|cc)/,()=>ifElement("a.btn.btn-primary[href]",a=>safelyNavigate(a.href)))
-	domainBypass("spacetica.com",()=>ifElement("a.btn.btn-prime.btn-xs[href]",a=>safelyNavigate(a.href)))
+	domainBypass("spacetica.com",()=>ifElement("a.btn.btn-xs[href]",a=>safelyNavigate(a.href)))
 	domainBypass(/uiz\.(io|app)|moon7\.xyz/,()=>crowdBypass(()=>{
 		awaitElement("#go-adsredirect",f=>{
 			f.action+="#bypassClipboard="+location.pathname.substr(1)
@@ -1353,6 +1354,20 @@ ensureDomLoaded(()=>{
 	domainBypass("daunshorte.kertashitam.com",()=>ifElement("div[align=center] > center > a[href]",a=>safelyAssign(a.href)))
 	hrefBypass(/www1\.swatchseries\.to\/freecale\.html\?r\=/,()=>awaitElement("a.push_button.blue[href]:not([href='http://www1.swatchseries.to/'])",a=>safelyNavigate(a.href)))
 	domainBypass("tl.gd",()=>safelyAssign("http://www.twitlonger.com/show"+location.pathname))
+	domainBypass("apkmodo.com",()=>{
+		ifElement(".show_download_links a[href]",a=>safelyNavigate(a.href),()=>{
+			if(location.search.substr(0,6)=="?xurl=")
+			{
+				safelyNavigate("http"+decodeURIComponent(location.search.substr(6)))
+			}
+		})
+	})
+	domainBypass("multifilemirror.com",()=>{
+		if(location.search!="?action=Download")
+		{
+			location.search="?action=Download"
+		}
+	})
 	//Insertion point for domain-or-href-specific bypasses running after the DOM is loaded. Bypasses here will no longer need to call ensureDomLoaded.
 	if(bypassed)
 	{
@@ -1767,12 +1782,10 @@ ensureDomLoaded(()=>{
 			return finish()
 		}
 	}
-	//Shorte.st
-	if(typeof app!="undefined"&&document.querySelector(".skip-add-container .first-img[alt='Shorte.st']"))
-	{
-		window.setInterval=f=>setInterval(f,800)
-		return crowdBypass()
-	}
+	//wpapk template
+	ifElement("a[href].wpapks-download-link",a=>ifElement("#wpapks-pre-download-btn",b=>{
+		b.onclick=()=>safelyNavigate(a.href)
+	}))
 	//Duit.cc
 	if(document.querySelector("script[src='https://duit.cc/js/jquery.1.8.3.js']"))
 	{
@@ -1783,10 +1796,19 @@ ensureDomLoaded(()=>{
 	}
 	if(document.querySelector("amp-facebook-page[data-href='https://www.facebook.com/duit.cc']"))
 	{
-		ifElement("#main > #Blog1 a",a=>{
-			safelyAssign(a.href)
-			finish()
-		})
+		if(typeof generate=="function")
+		{
+			window.setInterval=f=>setInterval(f,1)
+			generate()
+			awaitElement("#download > form > input[type='submit']",i=>i.click())
+		}
+		else
+		{
+			ifElement("#main > #Blog1 a",a=>{
+				safelyAssign(a.href)
+				finish()
+			})
+		}
 	}
 	//Other Templates
 	ifElement(".timed-content-client_show_0_30_0",d=>{//technicoz.com
